@@ -8,7 +8,7 @@ import {
     Dimensions,
     Image
 } from "react-native";
-import { TextTHR, ViewTHR } from "../@library";
+import { ButtonTHR, TextTHR, ViewTHR } from "../@library";
 import colors from "../@library/styles/colors";
 import cssConstants from "../@library/styles/css-constants";
 import { assets, getImagesArray } from "../helper";
@@ -61,6 +61,7 @@ interface DragPropInterface {
     path: string,
     rows: number,
     columns: number,
+    completed: Function
 }
 
 export default class DragAndDrop extends React.Component<DragPropInterface, DragStateInterface> {
@@ -262,7 +263,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                         //reset data
                         this.setState({
                             imgData: this.state.imgData
-                        }, () => { this.reset() });
+                        }, () => { this.checkComplition(); this.reset() });
                     }
                 }
             }
@@ -277,7 +278,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                         //reset data
                         this.setState({
                             imgData: this.state.imgData,
-                        }, () => { this.reset() });
+                        }, () => { this.checkComplition(); this.reset() });
                     }
                 }
             }
@@ -341,6 +342,10 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
         this.setState({ dragging: false, childIdx: -1, parentIdx: -1 });
     };
 
+    checkComplition = () => {
+        this.props.completed(this.state.imgData.every(img => img.every(_ => _.key?.split('-')[0] == img[0].key?.split('-')[0])))
+    }
+
     renderItem = (parentIndex: number, { item, index }: { item: React.JSX.Element, index: number }, noPanResponder = false) => (
         <ViewTHR
             style={{
@@ -358,7 +363,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
 
     render() {
         return (
-            <ViewTHR full paddingTop={this.paddingTop} paddingLeft={this.paddingLeft} style={styles.container}>
+            <ViewTHR full paddingTop={this.paddingTop} paddingLeft={this.paddingLeft}>
                 {this.state.dragging && (
                     <Animated.View
                         style={{
@@ -374,7 +379,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                 )}
                 {
                     this.state.loading ?
-                        <ViewTHR full justifyCenter marginBottom={50} style={styles.container}>
+                        <ViewTHR full justifyCenter marginBottom={50} paddingRight={this.paddingLeft}>
                             <Image
                                 source={require('../assets/loading.gif')}
                                 style={[
@@ -411,14 +416,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                             keyExtractor={(item, index) => '' + index}
                         />
                 }
-
             </ViewTHR>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: cssConstants.PRIMARY_COLOR
-    }
-});

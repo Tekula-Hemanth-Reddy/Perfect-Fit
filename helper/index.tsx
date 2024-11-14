@@ -81,3 +81,32 @@ export const getImagesArray = async (img: ImageSourcePropType | any, imgHeight: 
         return img
     }
 }
+
+export const getTimeDifference = (date1: Date, date2: Date) => {
+    const differenceInMilliseconds: number = (date2 as any) - (date1 as any);
+
+    const millisecondsInADay = 1000 * 60 * 60 * 24;
+    const millisecondsInAnHour = 1000 * 60 * 60;
+    const millisecondsInAMinute = 1000 * 60;
+    const millisecondsInASecond = 1000;
+
+    const days = Math.floor(differenceInMilliseconds / millisecondsInADay);
+    const hours = Math.floor((differenceInMilliseconds % millisecondsInADay) / millisecondsInAnHour);
+    const minutes = Math.floor((differenceInMilliseconds % millisecondsInAnHour) / millisecondsInAMinute);
+    const seconds = Math.floor((differenceInMilliseconds % millisecondsInAMinute) / millisecondsInASecond);
+    let time: string = ''
+
+    const getTime = (t: number, unit: string) => {
+        return `${time} ${t} ${unit}`
+    }
+    if (days)
+        time = getTime(days, 'days')
+    if (hours)
+        time = getTime(hours, 'hours')
+    if (minutes)
+        time = getTime(minutes, 'minutes')
+    if (seconds)
+        time = getTime(seconds, 'seconds')
+
+    return time;
+}

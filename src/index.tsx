@@ -17,6 +17,8 @@ import cssConstants from "../@library/styles/css-constants";
 import DragAndDrop from "./drag_drop";
 import colors from "../@library/styles/colors";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Completed } from "./completed";
+import { getTimeDifference } from "../helper";
 
 interface MainInterface {
     selectedImage: number,
@@ -24,7 +26,10 @@ interface MainInterface {
     selectedDimensions: {
         rows: number;
         columns: number;
-    }
+    },
+    completed: boolean;
+    startTime: Date;
+    timeTaken: string
 }
 
 export default class Main extends React.Component<{}, MainInterface> {
@@ -91,9 +96,19 @@ export default class Main extends React.Component<{}, MainInterface> {
             selectedDimensions: {
                 rows: 3,
                 columns: 3,
-            }
-
+            },
+            completed: false,
+            startTime: new Date(),
+            timeTaken: ''
         }
+    }
+
+    puzzelCompleted = (completed: boolean) => {
+        if (completed)
+            this.setState({
+                completed: completed,
+                timeTaken: getTimeDifference(this.state.startTime, new Date())
+            })
     }
 
     render() {
@@ -101,7 +116,7 @@ export default class Main extends React.Component<{}, MainInterface> {
             <>
                 {
                     (this.state.selectedImage == -1) ?
-                        <ViewTHR full paddingTop={100} paddingHorizontal style={styles.container}>
+                        <ViewTHR full paddingTop={100} paddingHorizontal>
                             <ViewTHR padding>
                                 <TextTHR title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</TextTHR>
                                 <FlatList
@@ -110,7 +125,13 @@ export default class Main extends React.Component<{}, MainInterface> {
                                     showsHorizontalScrollIndicator={false}
                                     scrollEnabled={true}
                                     renderItem={(item) => <TouchableOpacity
-                                        onPress={() => { this.setState({ selectedImage: item.index }) }}
+                                        onPress={() => {
+                                            this.setState({
+                                                selectedImage: item.index,
+                                                completed: false,
+                                                startTime: new Date(),
+                                            })
+                                        }}
                                     >
                                         <Image
                                             source={item.item.img}
@@ -130,7 +151,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                     keyExtractor={item => item.path}
                                 />
                             </ViewTHR>
-                            <ViewTHR full justifyCenter marginBottom={50} style={styles.container}>
+                            <ViewTHR full justifyCenter marginBottom={50}>
                                 <FlatList
                                     data={this.imgDimensions}
                                     ListHeaderComponent={<TextTHR title margin>Dimensions</TextTHR>}
@@ -168,27 +189,30 @@ export default class Main extends React.Component<{}, MainInterface> {
                             </ViewTHR>
                         </ViewTHR>
                         :
-                        <ViewTHR full style={styles.container}>
+                        !this.state.completed ?
                             <ViewTHR full>
-                                <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} />
+                                <ViewTHR full>
+                                    <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
+                                </ViewTHR>
+                                <ViewTHR justifyBetween padding paddingBottom={50} row>
+                                    <ButtonTHR
+                                        marginRight={cssConstants.DEFAULT_MARGIN / 2}
+                                        onPress={() => { this.setState({ showSelectedImage: true }) }}
+                                        secondary
+                                        text="View Image"
+                                        style={{ width: '45%' }}
+                                    />
+                                    <ButtonTHR
+                                        marginLeft={cssConstants.DEFAULT_MARGIN / 2}
+                                        onPress={() => { this.setState({ selectedImage: -1, completed: false }) }}
+                                        warning
+                                        text="Clear Selection"
+                                        style={{ width: '45%' }}
+                                    />
+                                </ViewTHR>
                             </ViewTHR>
-                            <ViewTHR justifyBetween padding paddingBottom={50} row style={styles.container}>
-                                <ButtonTHR
-                                    marginRight={cssConstants.DEFAULT_MARGIN / 2}
-                                    onPress={() => { this.setState({ showSelectedImage: true }) }}
-                                    secondary
-                                    text="View Image"
-                                    style={{ width: '45%' }}
-                                />
-                                <ButtonTHR
-                                    marginLeft={cssConstants.DEFAULT_MARGIN / 2}
-                                    onPress={() => { this.setState({ selectedImage: -1 }) }}
-                                    warning
-                                    text="Clear Selection"
-                                    style={{ width: '45%' }}
-                                />
-                            </ViewTHR>
-                        </ViewTHR>
+                            :
+                            <Completed image={this.images[this.state.selectedImage].img} timeTaken={this.state.timeTaken} nextPuzzle={() => { this.setState({ selectedImage: -1, completed: false }) }} />
                 }
 
                 <Modal
@@ -228,9 +252,6 @@ export default class Main extends React.Component<{}, MainInterface> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: cssConstants.PRIMARY_COLOR
-    },
     centeredView: {
         flex: 1,
         justifyContent: 'center',

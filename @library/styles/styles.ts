@@ -243,10 +243,13 @@ export const formStyles = StyleSheet.create({
 });
 
 export const commonStyles = StyleSheet.create({
+  container: {
+    backgroundColor: cssConstants.PRIMARY_COLOR
+  },
   fullView: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: colors.WHITE,
+    backgroundColor: cssConstants.PRIMARY_COLOR
   },
   thumbnail: {
     height: 60,
