@@ -343,7 +343,29 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
     };
 
     checkComplition = () => {
-        this.props.completed(this.state.imgData.every(img => img.every(_ => _.key?.split('-')[0] == img[0].key?.split('-')[0])))
+        const columns = this.state.imgData.every(img => {
+            const key = img[0].key?.split('-')[0]
+            let previous = 0
+            return img.every(_ => {
+                const p = _.key?.split('-') as string[]
+                const previousY = previous
+                previous = parseFloat(p[1])
+                return p[0] == key && previous >= previousY
+            })
+        }
+        )
+        let rows = false
+        if (columns) {
+            let previousX = 0
+            rows = this.state.imgData.every(img => {
+                const previous = previousX
+                const p = img[0].key?.split('-') as string[]
+                previousX = parseFloat(p[0])
+                return previousX >= previous
+            })
+        }
+
+        this.props.completed(columns && rows)
     }
 
     renderItem = (parentIndex: number, { item, index }: { item: React.JSX.Element, index: number }, noPanResponder = false) => (
