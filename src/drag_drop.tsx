@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    StyleSheet,
     FlatList,
     PanResponder,
     PanResponderInstance,
@@ -8,39 +7,10 @@ import {
     Dimensions,
     Image
 } from "react-native";
-import { ButtonTHR, TextTHR, ViewTHR } from "../@library";
-import colors from "../@library/styles/colors";
-import cssConstants from "../@library/styles/css-constants";
 import { assets, getImagesArray } from "../helper";
-
-const emoji: {
-    [key: number]: {
-        emoji: any,
-        color: string
-    }
-} = {
-    1: {
-        emoji: '😈',
-        color: colors.SUCCESS.SUCCESS_100
-    },
-    2: {
-        emoji: '🦊',
-        color: colors.SECONDARY.SECONDARY_100
-    },
-    3: {
-        emoji: '🐷',
-        color: colors.DANGER.DANGER_100
-    },
-    4: {
-        emoji: '🐶',
-        color: colors.NEUTRAL.NEUTRAL_100
-    }
-}
-
-function getRandomEmoji() {
-    const d = Math.floor(Math.random() * 4)
-    return emoji[d + 1];
-}
+import { RnView, RnText } from "../@library";
+import colors from "../@library/config/rn-colors";
+import rnConstants from "../@library/config/rn-constants";
 
 const colorMap: {
     [key: string]: {
@@ -90,13 +60,6 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
 
     constructor(props: DragPropInterface) {
         super(props);
-
-        const arrayData: string[][] = Array.from(Array(this.columns), (_, i) => {
-            return [];
-        }).map((num, index) => Array.from(Array(this.rows), (_, i) => {
-            colorMap[`${index}_${i}`] = getRandomEmoji()
-            return `${index}_${i}`
-        }))
         this.rows = this.props.rows,
             this.columns = this.props.columns
 
@@ -369,7 +332,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
     }
 
     renderItem = (parentIndex: number, { item, index }: { item: React.JSX.Element, index: number }, noPanResponder = false) => (
-        <ViewTHR
+        <RnView
             style={{
                 flexDirection: "row",
                 height: this.rowHeight,
@@ -379,13 +342,13 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
             }}
             {...(noPanResponder ? {} : this._panResponder.panHandlers)}
         >
-            <TextTHR>{item}</TextTHR>
-        </ViewTHR>
+            <RnText>{item}</RnText>
+        </RnView>
     );
 
     render() {
         return (
-            <ViewTHR full paddingTop={this.paddingTop} paddingLeft={this.paddingLeft}>
+            <RnView full paddingTop={this.paddingTop} paddingLeft={this.paddingLeft}>
                 {this.state.dragging && (
                     <Animated.View
                         style={{
@@ -401,7 +364,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                 )}
                 {
                     this.state.loading ?
-                        <ViewTHR full justifyCenter marginBottom={50} paddingRight={this.paddingLeft}>
+                        <RnView full justifyCenter marginBottom={50} paddingRight={this.paddingLeft}>
                             <Image
                                 source={require('../assets/loading.gif')}
                                 style={[
@@ -409,12 +372,12 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                                         width: '100%',
                                         height: '90%',
                                         resizeMode: 'stretch',
-                                        marginHorizontal: cssConstants.DEFAULT_MARGIN / 2,
+                                        marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
                                         borderRadius: 10
                                     },
                                 ]}
                             />
-                        </ViewTHR>
+                        </RnView>
                         :
                         <FlatList
                             data={this.state.imgData}
@@ -438,7 +401,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
                             keyExtractor={(item, index) => '' + index}
                         />
                 }
-            </ViewTHR>
+            </RnView>
         );
     }
 }

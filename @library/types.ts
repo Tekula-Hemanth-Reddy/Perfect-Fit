@@ -1,9 +1,5 @@
-import { ContentStyle } from "@shopify/flash-list";
-import { ImageStyle, ModalProps, TextInputProps, TextProps, TextStyle, TouchableOpacityProps, ViewProps, ViewStyle } from "react-native";
-import { WORKFLOW_ISSUE_ACTIONS, CommunicationFeatureType, IApprovalWorkflowLevel, IAttachment, IRoster, IUser, LABLE_POSITION, PickerOption, WORK_FLOW_TYPE, MimeTypes } from "../../models";
-import { captureType } from "../../models/enum-types";
-import { IMaterialReceipts } from "../../app/layout/features/(equipment-management)/constants/models";
-import { SkeletonPlaceholderProps } from "./skeleton-content/type";
+
+import { TextProps, TextStyle, TouchableOpacityProps, ViewProps } from "react-native";
 
 
 export interface DefaultStyleProps {
@@ -23,7 +19,7 @@ export interface DefaultStyleProps {
     marginBottom?: boolean | number;
 }
 
-export interface THRViewProps extends ViewProps, DefaultStyleProps {
+export interface RnViewProps extends ViewProps, DefaultStyleProps {
     row?: boolean;
     justifyCenter?: boolean;
     justifyStart?: boolean;
@@ -33,8 +29,8 @@ export interface THRViewProps extends ViewProps, DefaultStyleProps {
     col?: boolean;
     full?: boolean;
 }
-export interface THRTextProps extends TextProps, DefaultStyleProps {
-    fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900,
+export interface RnTextProps extends TextProps, DefaultStyleProps {
+    fontWeight?: TextStyle['fontWeight'],
     italic?: boolean,
     note?: boolean,
     light?: boolean,
@@ -43,25 +39,16 @@ export interface THRTextProps extends TextProps, DefaultStyleProps {
     textAlignCenter?: boolean,
     textAlignLeft?: boolean,
     textAlignRight?: boolean
-    maxLinesToView?: number,
     full?: boolean
 }
-export interface THRIconProps extends ViewProps {
-    name: string
-    color?: string;
-    size?: number;
-}
 
-export interface THRButtonProps extends TouchableOpacityProps, DefaultStyleProps {
+export interface RnButtonProps extends TouchableOpacityProps, DefaultStyleProps {
     text?: string;
     textStyles?: TextStyle;
-    // textStyle?: RnTextStyleProp;
     large?: boolean;
     small?: boolean;
     transparent?: boolean;
     outline?: boolean;
-    // type?: 'filled' | 'outline' | 'transparent', // transparent is the priority over themed buttons
-    // height?: 'small' | 'medium' | 'base' | 'large',//
     iconLeft?: JSX.Element
     iconRight?: JSX.Element,
     icon?: JSX.Element;
@@ -76,10 +63,16 @@ export interface THRButtonProps extends TouchableOpacityProps, DefaultStyleProps
     justifyBetween?: boolean,
     maxLinesToView?: number,
     numberOfLines?: number,
-    textStyle?: TextProps.style,
-    textProps?: THRTextProps,
+    textStyle?: TextStyle,
+    textFontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+    textProps?: RnTextProps,
     brightBorder?: boolean,
-    isActionDone?: boolean, // this is to avoid multiple clicks
     onPress?: () => void, // onPress by default closes the alertModal. Override it if you want to change the functionality
-    // theme?: 'primary' | 'secondary' | 'warning' | 'default' | 'success' | 'danger' | 'neutral';
+}
+
+export interface RnIconProps extends ViewProps {
+    type?: 'MaterialIcons' | "FontAwesome" | "FontAwesome5" | "FontAwesome6" | "Feather" | "Entypo" | "EvilIcons" | "Ionicons" | "AntDesign";
+    name: string
+    color?: string;
+    size?: number;
 }

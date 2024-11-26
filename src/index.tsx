@@ -5,20 +5,15 @@ import {
     Image,
     ImageSourcePropType,
     TouchableOpacity,
-    KeyboardAvoidingView,
     Modal,
-    Platform,
     Pressable,
-    ScrollView,
-    TouchableWithoutFeedback
 } from "react-native";
-import { ButtonTHR, TextTHR, ViewTHR } from "../@library";
-import cssConstants from "../@library/styles/css-constants";
 import DragAndDrop from "./drag_drop";
-import colors from "../@library/styles/colors";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Completed } from "./completed";
 import { getTimeDifference } from "../helper";
+import { RnView, RnText, RnButton } from "../@library";
+import colors from "../@library/config/rn-colors";
+import rnConstants from "../@library/config/rn-constants";
 
 interface MainInterface {
     selectedImage: number,
@@ -34,6 +29,10 @@ interface MainInterface {
 
 export default class Main extends React.Component<{}, MainInterface> {
     images: { path: string, img: ImageSourcePropType }[] = [
+        {
+            path: 'camera',
+            img: require('../assets/camera.jpg')
+        },
         {
             path: 'first',
             img: require('../assets/img/first.jpeg')
@@ -60,30 +59,37 @@ export default class Main extends React.Component<{}, MainInterface> {
         }
     ]
     imgDimensions: {
+        level: string;
         rows: number;
         columns: number;
     }[] = [
             {
+                level: 'Beginner',
                 rows: 3,
                 columns: 3,
             },
             {
+                level: 'Novice',
                 rows: 4,
                 columns: 3,
             },
             {
+                level: 'Intermediate',
                 rows: 4,
                 columns: 4,
             },
             {
+                level: 'Advanced',
                 rows: 5,
                 columns: 4,
             },
             {
+                level: 'Expert',
                 rows: 5,
                 columns: 5,
             },
             {
+                level: 'Master',
                 rows: 6,
                 columns: 5,
             },
@@ -116,9 +122,9 @@ export default class Main extends React.Component<{}, MainInterface> {
             <>
                 {
                     (this.state.selectedImage == -1) ?
-                        <ViewTHR full paddingTop={100} paddingHorizontal>
-                            <ViewTHR padding>
-                                <TextTHR title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</TextTHR>
+                        <RnView full paddingTop={100} paddingHorizontal>
+                            <RnView padding>
+                                <RnText title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</RnText>
                                 <FlatList
                                     data={this.images}
                                     horizontal
@@ -140,7 +146,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                                     width: 100,
                                                     height: 150,
                                                     resizeMode: 'stretch',
-                                                    marginHorizontal: cssConstants.DEFAULT_MARGIN / 2,
+                                                    marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
                                                     borderRadius: 10
                                                 },
                                             ]}
@@ -150,26 +156,26 @@ export default class Main extends React.Component<{}, MainInterface> {
                                     scrollEventThrottle={16}
                                     keyExtractor={item => item.path}
                                 />
-                            </ViewTHR>
-                            <ViewTHR full justifyCenter marginBottom={50}>
+                            </RnView>
+                            <RnView full justifyCenter marginBottom={50}>
                                 <FlatList
                                     data={this.imgDimensions}
-                                    ListHeaderComponent={<TextTHR title margin>Dimensions</TextTHR>}
+                                    ListHeaderComponent={<RnText title margin>Choose Level</RnText>}
                                     showsVerticalScrollIndicator={false}
                                     scrollEnabled={true}
                                     numColumns={3}
-                                    renderItem={(item) => <ViewTHR padding style={{
+                                    renderItem={(item) => <RnView padding style={{
                                         width: '33%'
                                     }}>
-                                        <ButtonTHR
+                                        <RnButton
                                             onPress={() => {
                                                 this.setState({
                                                     selectedDimensions: item.item
                                                 })
                                             }}
                                             secondary={this.state.selectedDimensions.rows == item.item.rows && this.state.selectedDimensions.columns == item.item.columns}
-                                            text={`${item.item.rows} X ${item.item.columns}`} />
-                                    </ViewTHR>
+                                            text={`${item.item.level}`} />
+                                    </RnView>
                                     }
                                     scrollEventThrottle={16}
                                     keyExtractor={item => `${item.rows}#${item.columns}`}
@@ -181,36 +187,36 @@ export default class Main extends React.Component<{}, MainInterface> {
                                             width: '100%',
                                             height: '70%',
                                             resizeMode: 'stretch',
-                                            marginHorizontal: cssConstants.DEFAULT_MARGIN / 2,
+                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
                                             borderRadius: 10
                                         },
                                     ]}
                                 />
-                            </ViewTHR>
-                        </ViewTHR>
+                            </RnView>
+                        </RnView>
                         :
                         !this.state.completed ?
-                            <ViewTHR full>
-                                <ViewTHR full>
+                            <RnView full>
+                                <RnView full>
                                     <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
-                                </ViewTHR>
-                                <ViewTHR justifyBetween padding paddingBottom={50} row>
-                                    <ButtonTHR
-                                        marginRight={cssConstants.DEFAULT_MARGIN / 2}
+                                </RnView>
+                                <RnView justifyBetween padding paddingBottom={50} row>
+                                    <RnButton
+                                        marginRight={rnConstants.DEFAULT_MARGIN / 2}
                                         onPress={() => { this.setState({ showSelectedImage: true }) }}
                                         secondary
                                         text="View Image"
                                         style={{ width: '45%' }}
                                     />
-                                    <ButtonTHR
-                                        marginLeft={cssConstants.DEFAULT_MARGIN / 2}
+                                    <RnButton
+                                        marginLeft={rnConstants.DEFAULT_MARGIN / 2}
                                         onPress={() => { this.setState({ selectedImage: -1, completed: false }) }}
                                         warning
                                         text="Clear Selection"
                                         style={{ width: '45%' }}
                                     />
-                                </ViewTHR>
-                            </ViewTHR>
+                                </RnView>
+                            </RnView>
                             :
                             <Completed image={this.images[this.state.selectedImage].img} timeTaken={this.state.timeTaken} nextPuzzle={() => { this.setState({ selectedImage: -1, completed: false }) }} />
                 }
@@ -222,8 +228,8 @@ export default class Main extends React.Component<{}, MainInterface> {
                     onRequestClose={() => {
                         this.setState({ showSelectedImage: false })
                     }}>
-                    <ViewTHR style={styles.centeredView}>
-                        <ViewTHR style={styles.modalView}>
+                    <RnView style={styles.centeredView}>
+                        <RnView style={styles.modalView}>
                             {(this.state.selectedImage != -1) &&
                                 <Image
                                     source={this.images[this.state.selectedImage].img}
@@ -232,7 +238,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                             width: 200,
                                             height: 250,
                                             resizeMode: 'stretch',
-                                            marginHorizontal: cssConstants.DEFAULT_MARGIN / 2,
+                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
                                             borderRadius: 10
                                         },
                                     ]}
@@ -241,10 +247,10 @@ export default class Main extends React.Component<{}, MainInterface> {
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => this.setState({ showSelectedImage: false })}>
-                                <TextTHR style={styles.textStyle}>Hide Image</TextTHR>
+                                <RnText style={styles.textStyle}>Hide Image</RnText>
                             </Pressable>
-                        </ViewTHR>
-                    </ViewTHR>
+                        </RnView>
+                    </RnView>
                 </Modal>
             </>
         );
