@@ -82,6 +82,82 @@ const containerStyles = StyleSheet.create({
   },
 })
 
+const imagePicker = StyleSheet.create({
+  bottomView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  actionModalView: {
+    width: 240,
+    backgroundColor: rnConstants.WHITE_COLOR,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  actionButton: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: rnConstants.DEFAULT_PADDING,
+    borderRadius: 100,
+    marginBottom: rnConstants.DEFAULT_MARGIN / 2,
+  },
+  galleryButton: {
+    backgroundColor: rnConstants.GALLERY,
+  },
+  cameraButton: {
+    backgroundColor: rnConstants.CAMERA,
+  },
+  closeButton: {
+    backgroundColor: rnConstants.WARNING_BACKGROUND,
+  }
+});
+
+const mainStyles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: rnConstants.WHITE_COLOR,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  previewButton: {
+    marginTop: 20,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: '#2196F3',
+  },
+  previewTextStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
+
 
 export const rnStyles = StyleSheet.create({
   fullView: {
@@ -104,4 +180,6 @@ export const rnStyles = StyleSheet.create({
   ...containerStyles,
   ...textStyles,
   ...layout,
+  ...imagePicker,
+  ...mainStyles
 });

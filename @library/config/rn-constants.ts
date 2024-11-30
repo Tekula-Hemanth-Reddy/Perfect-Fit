@@ -7,6 +7,9 @@ const rnConstants = {
     LARGE_INPUT_HEIGHT: 44,
     HEADER_HEIGHT: 40,
 
+    TOOLBAR_HEIGHT: 60,
+    ICON_SIZE_LARGE: 40,
+
     //radius
     BASE_BORDER_RADIUS: 6,
     INPUT_BORDER_RADIUS: 4,
@@ -73,6 +76,9 @@ const rnConstants = {
 
     BORDER_COLOR: colors.SECONDARY.SECONDARY_50,
     DISABLE_COLOR: colors.NEUTRAL.NEUTRAL_40,
+
+    GALLERY: '#7C57A6',
+    CAMERA: '#F79818',
 };
 
 export default rnConstants;

@@ -26,12 +26,14 @@ export const getImageInPrefferedSize = async (img: string, height: number, width
 
 export const getImagesArray = async (img: ImageSourcePropType | any, imgHeight: number, imgWidth: number, rows: number, columns: number) => {
     try {
-        const asset = Asset.fromModule(img); // Update with your asset path
-        await asset.downloadAsync(); // Ensure the asset is fully loaded
+        if (!img.uri) {
+            img = Asset.fromModule(img); // Update with your asset path
+            await img.downloadAsync(); // Ensure the asset is fully loaded
+        }
 
         const width = imgWidth * columns, height = imgHeight * rows
         const imgResult = await ImageManipulator.manipulateAsync(
-            asset.uri,
+            img.uri,
             [{ resize: { width: width, height: height } }], // Desired width and height
             { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
         );

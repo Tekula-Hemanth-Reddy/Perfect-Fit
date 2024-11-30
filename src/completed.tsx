@@ -37,7 +37,7 @@ export const Completed = (props: CompletedInterface) => {
                 },
             ]}
         />
-        <RnText>Hey 👋! Congratulations on completing the puzzle! It took you {props.timeTaken} to finish. Click on <RnText title>Next Puzzle</RnText> to start the next challenge!</RnText>
+        <RnText marginTop={rnConstants.DEFAULT_MARGIN * 2}>Hey 👋! Congratulations on completing the puzzle! It took you {props.timeTaken} to finish. Click on <RnText title>Next Puzzle</RnText> to start the next challenge!</RnText>
         <RnButton onPress={() => props.nextPuzzle()} marginTop text="Next Puzzle" success style={{ width: '45%', alignSelf: 'center' }} />
     </RnView>
 }

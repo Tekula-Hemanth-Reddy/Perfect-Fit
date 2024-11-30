@@ -9,16 +9,8 @@ import {
 } from "react-native";
 import { assets, getImagesArray } from "../helper";
 import { RnView, RnText } from "../@library";
-import colors from "../@library/config/rn-colors";
 import rnConstants from "../@library/config/rn-constants";
-
-const colorMap: {
-    [key: string]: {
-        emoji: any,
-        color: string
-    }
-} = {};
-
+import { ImageResult } from "expo-image-manipulator";
 interface DragStateInterface {
     imgData: React.JSX.Element[][]
     dragging: boolean,
@@ -28,7 +20,8 @@ interface DragStateInterface {
 }
 
 interface DragPropInterface {
-    path: string,
+    path?: string,
+    captureImage?: ImageResult
     rows: number,
     columns: number,
     completed: Function
@@ -157,7 +150,11 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
     }
 
     async getShuffledImages() {
-        const arr = await getImagesArray(assets[this.props.path], this.rowHeight, this.rowWidth, this.rows, this.columns)
+        let arr = []
+        if (typeof this.props.path == 'string')
+            arr = await getImagesArray(assets[this.props.path], this.rowHeight, this.rowWidth, this.rows, this.columns)
+        else
+            arr = await getImagesArray(this.props.captureImage, this.rowHeight, this.rowWidth, this.rows, this.columns)
         const result: React.JSX.Element[][] = []
         for (let i = 0; i < arr.length; i += this.rows) {
             result.push(arr.slice(i, i + this.rows)); // Slice the array into subarrays of size `columns`

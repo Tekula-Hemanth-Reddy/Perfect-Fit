@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    StyleSheet,
     FlatList,
     Image,
     ImageSourcePropType,
@@ -15,6 +14,10 @@ import { RnView, RnText, RnButton } from "../@library";
 import colors from "../@library/config/rn-colors";
 import rnConstants from "../@library/config/rn-constants";
 import { rnLevel } from "../@library/config/levels";
+import { imgDimensions } from "../@library/config/imageDimensions";
+import AttachmentPicker from "./image-picker";
+import { rnStyles } from "../@library/config/rn-styles";
+import { ImageResult } from "expo-image-manipulator";
 
 interface MainInterface {
     selectedImage: number,
@@ -24,17 +27,18 @@ interface MainInterface {
         rows: number;
         columns: number;
     },
+    imageCapture?: ImageResult
     completed: boolean;
     startTime: Date;
-    timeTaken: string
+    timeTaken: string;
 }
 
 export default class Main extends React.Component<{}, MainInterface> {
+    img = {
+        path: 'camera',
+        img: require('../assets/camera.jpg')
+    }
     images: { path: string, img: ImageSourcePropType }[] = [
-        {
-            path: 'camera',
-            img: require('../assets/camera.jpg')
-        },
         {
             path: 'first',
             img: require('../assets/img/first.jpeg')
@@ -60,46 +64,11 @@ export default class Main extends React.Component<{}, MainInterface> {
             img: require('../assets/img/sixth.jpeg')
         }
     ]
-    imgDimensions: {
-        level: string;
-        rows: number;
-        columns: number;
-    }[] = [
-            {
-                level: 'Beginner',
-                rows: 3,
-                columns: 3,
-            },
-            {
-                level: 'Novice',
-                rows: 4,
-                columns: 3,
-            },
-            {
-                level: 'Intermediate',
-                rows: 4,
-                columns: 4,
-            },
-            {
-                level: 'Advanced',
-                rows: 5,
-                columns: 4,
-            },
-            {
-                level: 'Expert',
-                rows: 5,
-                columns: 5,
-            },
-            {
-                level: 'Master',
-                rows: 6,
-                columns: 5,
-            },
-        ]
     constructor(props: {}) {
         super(props)
         this.state = {
             selectedImage: -1,
+            imageCapture: undefined,
             showSelectedImage: false,
             selectedDimensions: {
                 level: 'Beginner',
@@ -120,49 +89,62 @@ export default class Main extends React.Component<{}, MainInterface> {
             })
     }
 
+    onImageSelect = (image: ImageResult) => {
+        this.setState({
+            selectedImage: -1,
+            imageCapture: image,
+            completed: false,
+            startTime: new Date(),
+        })
+    }
+
     render() {
         return (
             <>
                 {
-                    (this.state.selectedImage == -1) ?
+                    ((this.state.selectedImage == -1) && !this.state.imageCapture) ?
                         <RnView full paddingTop={100} paddingHorizontal>
                             <RnView padding>
                                 <RnText title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</RnText>
-                                <FlatList
-                                    data={this.images}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    scrollEnabled={true}
-                                    renderItem={(item) => <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                selectedImage: item.index,
-                                                completed: false,
-                                                startTime: new Date(),
-                                            })
-                                        }}
-                                    >
-                                        <Image
-                                            source={item.item.img}
-                                            style={[
-                                                {
-                                                    width: 100,
-                                                    height: 150,
-                                                    resizeMode: 'stretch',
-                                                    marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                                                    borderRadius: 10
-                                                },
-                                            ]}
-                                        />
-                                    </TouchableOpacity>
-                                    }
-                                    scrollEventThrottle={16}
-                                    keyExtractor={item => item.path}
-                                />
+                                <RnView row>
+                                    <AttachmentPicker onImageSelect={this.onImageSelect.bind(this)} />
+                                    <FlatList
+                                        data={this.images}
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        scrollEnabled={true}
+                                        renderItem={(item) => <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    imageCapture: undefined,
+                                                    selectedImage: item.index,
+                                                    completed: false,
+                                                    startTime: new Date(),
+                                                })
+                                            }}
+                                        >
+                                            <Image
+                                                source={item.item.img}
+                                                style={[
+                                                    {
+                                                        width: 100,
+                                                        height: 150,
+                                                        resizeMode: 'stretch',
+                                                        marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
+                                                        borderRadius: 10
+                                                    },
+                                                ]}
+                                            />
+                                        </TouchableOpacity>
+                                        }
+                                        scrollEventThrottle={16}
+                                        keyExtractor={item => item.path}
+                                    />
+                                </RnView>
                             </RnView>
                             <RnView full justifyCenter marginBottom={50}>
                                 <FlatList
-                                    data={this.imgDimensions}
+                                    data={imgDimensions}
                                     ListHeaderComponent={<RnText title margin>{`Choosen Level : ${this.state.selectedDimensions.level}`}</RnText>}
                                     showsVerticalScrollIndicator={false}
                                     scrollEnabled={true}
@@ -211,7 +193,12 @@ export default class Main extends React.Component<{}, MainInterface> {
                         !this.state.completed ?
                             <RnView full>
                                 <RnView full>
-                                    <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
+                                    {
+                                        (this.state.selectedImage == -1) ?
+                                            <DragAndDrop captureImage={this.state.imageCapture} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
+                                            :
+                                            <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
+                                    }
                                 </RnView>
                                 <RnView justifyBetween padding paddingBottom={50} row>
                                     <RnButton
@@ -223,7 +210,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                     />
                                     <RnButton
                                         marginLeft={rnConstants.DEFAULT_MARGIN / 2}
-                                        onPress={() => { this.setState({ selectedImage: -1, completed: false }) }}
+                                        onPress={() => { this.setState({ selectedImage: -1, completed: false, imageCapture: undefined }) }}
                                         warning
                                         text="Clear Selection"
                                         style={{ width: '45%' }}
@@ -231,7 +218,13 @@ export default class Main extends React.Component<{}, MainInterface> {
                                 </RnView>
                             </RnView>
                             :
-                            <Completed image={this.images[this.state.selectedImage].img} timeTaken={this.state.timeTaken} nextPuzzle={() => { this.setState({ selectedImage: -1, completed: false }) }} />
+                            <Completed image={
+                                this.state.selectedImage == -1
+                                    ?
+                                    { uri: this.state.imageCapture?.uri }
+                                    :
+                                    this.images[this.state.selectedImage].img
+                            } timeTaken={this.state.timeTaken} nextPuzzle={() => { this.setState({ selectedImage: -1, completed: false, imageCapture: undefined }) }} />
                 }
 
                 <Modal
@@ -241,9 +234,22 @@ export default class Main extends React.Component<{}, MainInterface> {
                     onRequestClose={() => {
                         this.setState({ showSelectedImage: false })
                     }}>
-                    <RnView style={styles.centeredView}>
-                        <RnView style={styles.modalView}>
-                            {(this.state.selectedImage != -1) &&
+                    <RnView style={rnStyles.centeredView}>
+                        <RnView style={rnStyles.modalView}>
+                            {(this.state.selectedImage == -1) ?
+                                <Image
+                                    source={{ uri: this.state.imageCapture?.uri }}
+                                    style={[
+                                        {
+                                            width: 200,
+                                            height: 250,
+                                            resizeMode: 'stretch',
+                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
+                                            borderRadius: 10
+                                        },
+                                    ]}
+                                />
+                                :
                                 <Image
                                     source={this.images[this.state.selectedImage].img}
                                     style={[
@@ -258,9 +264,9 @@ export default class Main extends React.Component<{}, MainInterface> {
                                 />
                             }
                             <Pressable
-                                style={[styles.button, styles.buttonClose]}
+                                style={[rnStyles.previewButton]}
                                 onPress={() => this.setState({ showSelectedImage: false })}>
-                                <RnText style={styles.textStyle}>Hide Image</RnText>
+                                <RnText style={rnStyles.previewTextStyle}>Hide Image</RnText>
                             </Pressable>
                         </RnView>
                     </RnView>
@@ -269,40 +275,3 @@ export default class Main extends React.Component<{}, MainInterface> {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    button: {
-        marginTop: 20,
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-    },
-    buttonClose: {
-        backgroundColor: '#2196F3',
-    },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-});
