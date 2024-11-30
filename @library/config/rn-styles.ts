@@ -87,7 +87,7 @@ export const rnStyles = StyleSheet.create({
   fullView: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: rnConstants.WHITE_COLOR,
+    backgroundColor: rnConstants.BACKGROUND_COLOR,
   },
   thumbnail: {
     height: 60,

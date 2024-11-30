@@ -14,11 +14,13 @@ import { getTimeDifference } from "../helper";
 import { RnView, RnText, RnButton } from "../@library";
 import colors from "../@library/config/rn-colors";
 import rnConstants from "../@library/config/rn-constants";
+import { rnLevel } from "../@library/config/levels";
 
 interface MainInterface {
     selectedImage: number,
     showSelectedImage: boolean,
     selectedDimensions: {
+        level: string;
         rows: number;
         columns: number;
     },
@@ -100,6 +102,7 @@ export default class Main extends React.Component<{}, MainInterface> {
             selectedImage: -1,
             showSelectedImage: false,
             selectedDimensions: {
+                level: 'Beginner',
                 rows: 3,
                 columns: 3,
             },
@@ -160,7 +163,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                             <RnView full justifyCenter marginBottom={50}>
                                 <FlatList
                                     data={this.imgDimensions}
-                                    ListHeaderComponent={<RnText title margin>Choose Level</RnText>}
+                                    ListHeaderComponent={<RnText title margin>{`Choosen Level : ${this.state.selectedDimensions.level}`}</RnText>}
                                     showsVerticalScrollIndicator={false}
                                     scrollEnabled={true}
                                     numColumns={3}
@@ -173,7 +176,17 @@ export default class Main extends React.Component<{}, MainInterface> {
                                                     selectedDimensions: item.item
                                                 })
                                             }}
-                                            secondary={this.state.selectedDimensions.rows == item.item.rows && this.state.selectedDimensions.columns == item.item.columns}
+                                            style={(this.state.selectedDimensions.level == item.item.level) ? {
+                                                backgroundColor: rnLevel[item.item.level].backgroundColor,
+                                                borderColor: rnLevel[item.item.level].backgroundColor
+                                            } :
+                                                {
+                                                    backgroundColor: rnLevel[item.item.level].lightBackgroundColor,
+                                                    borderColor: rnLevel[item.item.level].backgroundColor
+                                                }}
+                                            textStyle={{
+                                                color: (this.state.selectedDimensions.level == item.item.level) ? rnConstants.WHITE_COLOR : rnConstants.BLACK_COLOR
+                                            }}
                                             text={`${item.item.level}`} />
                                     </RnView>
                                     }

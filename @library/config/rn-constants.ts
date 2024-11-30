@@ -63,7 +63,7 @@ const rnConstants = {
     WARNING_COLOR: colors.DANGER.DANGER_50,
     DARK_WARNING_COLOR: colors.DANGER.DANGER_400,
 
-    BACKGROUND_COLOR: colors.WHITE,
+    BACKGROUND_COLOR: colors.PRIMARY.PRIMARY_50,
     WARNING_BACKGROUND: colors.DANGER.DANGER_300,
 
     // Text Colors
