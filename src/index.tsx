@@ -103,7 +103,7 @@ export default class Main extends React.Component<{}, MainInterface> {
             <>
                 {
                     ((this.state.selectedImage == -1) && !this.state.imageCapture) ?
-                        <RnView full paddingTop={100} paddingHorizontal>
+                        <RnView full paddingTop={20} paddingHorizontal>
                             <RnView padding>
                                 <RnText title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</RnText>
                                 <RnView row>
@@ -180,7 +180,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                     style={[
                                         {
                                             width: '100%',
-                                            height: '70%',
+                                            height: '60%',
                                             resizeMode: 'stretch',
                                             marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
                                             borderRadius: 10
