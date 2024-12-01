@@ -5,6 +5,8 @@ import {
 } from "react-native";
 import { RnView, RnText, RnButton } from "../@library";
 import rnConstants from "../@library/config/rn-constants";
+import { formatString } from "../helper";
+import { rnStrings } from "../@library/config/rn-strings";
 
 interface CompletedInterface {
     image: ImageSourcePropType,
@@ -37,7 +39,16 @@ export const Completed = (props: CompletedInterface) => {
                 },
             ]}
         />
-        <RnText marginTop={rnConstants.DEFAULT_MARGIN * 2}>Hey 👋! Congratulations on completing the puzzle! It took you {props.timeTaken} to finish. Click on <RnText title>Next Puzzle</RnText> to start the next challenge!</RnText>
-        <RnButton onPress={() => props.nextPuzzle()} marginTop text="Next Puzzle" success style={{ width: '45%', alignSelf: 'center' }} />
+        <RnText margin={rnConstants.DEFAULT_MARGIN * 2} title>
+            {formatString(rnStrings.NEXT_LEVEL, props.timeTaken)}
+        </RnText>
+        <RnButton
+            onPress={() => props.nextPuzzle()}
+            text={rnStrings.NEXT_PUZZLE}
+            success
+            large
+            style={{ width: '45%', alignSelf: 'center' }}
+            textStyle={{ fontSize: rnConstants.LARGE_FONT_SIZE }}
+        />
     </RnView>
 }

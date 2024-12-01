@@ -29,7 +29,7 @@ interface DragPropInterface {
 
 export default class DragAndDrop extends React.Component<DragPropInterface, DragStateInterface> {
 
-    paddingTop: number = 100;
+    paddingTop: number = 10;
     paddingLeft: number = 15;
 
     rows: number = 3;

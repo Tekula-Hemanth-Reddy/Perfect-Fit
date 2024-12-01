@@ -10,7 +10,6 @@ const layout = StyleSheet.create({
     borderColor: rnConstants.BORDER_COLOR,
     borderRadius: rnConstants.BASE_BORDER_RADIUS,
   },
-
   col: {
     display: "flex",
     flexDirection: "column",
@@ -83,43 +82,12 @@ const containerStyles = StyleSheet.create({
 })
 
 const imagePicker = StyleSheet.create({
-  bottomView: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  actionModalView: {
-    width: 240,
-    backgroundColor: rnConstants.WHITE_COLOR,
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  actionButton: {
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: rnConstants.DEFAULT_PADDING,
-    borderRadius: 100,
-    marginBottom: rnConstants.DEFAULT_MARGIN / 2,
-  },
-  galleryButton: {
-    backgroundColor: rnConstants.GALLERY,
-  },
-  cameraButton: {
-    backgroundColor: rnConstants.CAMERA,
-  },
-  closeButton: {
-    backgroundColor: rnConstants.WARNING_BACKGROUND,
+  imagePicker: {
+    width: 100,
+    height: 150,
+    resizeMode: 'stretch',
+    marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
+    borderRadius: 10
   }
 });
 

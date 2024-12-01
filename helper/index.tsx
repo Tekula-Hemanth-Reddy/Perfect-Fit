@@ -112,3 +112,10 @@ export const getTimeDifference = (date1: Date, date2: Date) => {
 
     return time;
 }
+
+export function formatString(path: string, ...val: string[]) {
+    for (let index = 0; index < val.length; index++) {
+        path = path.replace(new RegExp('\\{' + `${index}` + '\\}', 'g'), val[index] || '');
+    }
+    return path;
+}

@@ -57,7 +57,7 @@ export function RnText({ fontWeight, italic, note, light, title,
         , { fontStyle: italic ? 'italic' : 'normal', fontWeight: fontWeight ? fontWeight : 'normal' },
         { ...(note ? { fontSize: rnConstants.SMALL_FONT_SIZE } : {}) },
         { ...(light ? { color: rnConstants.LIGHT_TEXT_COLOR } : {}) },
-        { ...(title ? { fontSize: rnConstants.MEDIUM_FONT_SIZE, color: rnConstants.SECONDARY_COLOR } : {}) },
+        { ...(title ? { fontSize: rnConstants.LARGE_FONT_SIZE, color: rnConstants.DARK_SECONDARY_COLOR } : {}) },
 
         (alignCenter ? rnStyles.textAlignCenter : {}),
         (alignLeft ? rnStyles.textAlignLeft : {}),

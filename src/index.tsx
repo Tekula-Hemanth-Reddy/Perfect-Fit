@@ -5,11 +5,10 @@ import {
     ImageSourcePropType,
     TouchableOpacity,
     Modal,
-    Pressable,
+    Dimensions
 } from "react-native";
-import DragAndDrop from "./drag_drop";
 import { Completed } from "./completed";
-import { getTimeDifference } from "../helper";
+import { formatString, getTimeDifference } from "../helper";
 import { RnView, RnText, RnButton } from "../@library";
 import colors from "../@library/config/rn-colors";
 import rnConstants from "../@library/config/rn-constants";
@@ -18,6 +17,8 @@ import { imgDimensions } from "../@library/config/imageDimensions";
 import AttachmentPicker from "./image-picker";
 import { rnStyles } from "../@library/config/rn-styles";
 import { ImageResult } from "expo-image-manipulator";
+import { rnStrings } from "../@library/config/rn-strings";
+import DragAndDrop from "./drag_drop";
 
 interface MainInterface {
     selectedImage: number,
@@ -64,8 +65,19 @@ export default class Main extends React.Component<{}, MainInterface> {
             img: require('../assets/img/sixth.jpeg')
         }
     ]
+    dimension: {
+        width: number,
+        height: number,
+    } = {
+            width: 0,
+            height: 0
+        }
     constructor(props: {}) {
         super(props)
+        this.dimension = {
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height
+        }
         this.state = {
             selectedImage: -1,
             imageCapture: undefined,
@@ -81,7 +93,7 @@ export default class Main extends React.Component<{}, MainInterface> {
         }
     }
 
-    puzzelCompleted = (completed: boolean) => {
+    private puzzelCompleted = (completed: boolean) => {
         if (completed)
             this.setState({
                 completed: completed,
@@ -89,7 +101,7 @@ export default class Main extends React.Component<{}, MainInterface> {
             })
     }
 
-    onImageSelect = (image: ImageResult) => {
+    private onImageSelect = (image: ImageResult) => {
         this.setState({
             selectedImage: -1,
             imageCapture: image,
@@ -98,176 +110,190 @@ export default class Main extends React.Component<{}, MainInterface> {
         })
     }
 
+    private onPreImageSelect = (imgIndex: number) => {
+        this.setState({
+            imageCapture: undefined,
+            selectedImage: imgIndex,
+            completed: false,
+            startTime: new Date(),
+        })
+    }
+
+    private clearImageSelection = () => [
+        this.setState({
+            selectedImage: -1,
+            completed: false,
+            imageCapture: undefined
+        })
+    ]
+
+    private getSelectedImage = () => {
+        return (
+            this.state.selectedImage == -1
+                ?
+                { uri: this.state.imageCapture?.uri }
+                :
+                this.images[this.state.selectedImage].img
+        )
+    }
+
+    private setSelectedImage = (selected: boolean) => {
+        this.setState({ showSelectedImage: selected })
+    }
+
+    renderMainScreen = () => {
+        return <RnView full paddingTop={20} paddingHorizontal>
+            <RnView padding>
+                <RnText
+                    title
+                    marginBottom
+                    textAlignCenter
+                    style={{ color: colors.SECONDARY.SECONDARY_900 }}>
+                    {rnStrings.SELECT_IMAGE_TO_START_GAME}
+                </RnText>
+                <RnView row>
+                    <AttachmentPicker onImageSelect={this.onImageSelect.bind(this)} />
+                    <FlatList
+                        data={this.images}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        scrollEnabled={true}
+                        renderItem={(item) => <TouchableOpacity
+                            onPress={this.onPreImageSelect.bind(this, item.index)}
+                        >
+                            <Image
+                                source={item.item.img}
+                                style={rnStyles.imagePicker}
+                            />
+                        </TouchableOpacity>
+                        }
+                        scrollEventThrottle={16}
+                        keyExtractor={item => item.path}
+                    />
+                </RnView>
+            </RnView>
+            <RnView full justifyCenter marginBottom={50}>
+                <FlatList
+                    data={imgDimensions}
+                    ListHeaderComponent={<RnText title margin>{formatString(rnStrings.CHOOSEN_LEVEL, this.state.selectedDimensions.level)}</RnText>}
+                    showsVerticalScrollIndicator={false}
+                    scrollEnabled={true}
+                    numColumns={3}
+                    renderItem={(item) => <RnView padding style={{
+                        width: '33%'
+                    }}>
+                        <RnButton
+                            onPress={() => {
+                                this.setState({
+                                    selectedDimensions: item.item
+                                })
+                            }}
+                            style={(this.state.selectedDimensions.level == item.item.level) ? {
+                                backgroundColor: rnLevel[item.item.level].backgroundColor,
+                                borderColor: rnLevel[item.item.level].backgroundColor
+                            } :
+                                {
+                                    backgroundColor: rnLevel[item.item.level].lightBackgroundColor,
+                                    borderColor: rnLevel[item.item.level].backgroundColor
+                                }}
+                            textStyle={{
+                                color: (this.state.selectedDimensions.level == item.item.level) ? rnConstants.WHITE_COLOR : rnConstants.BLACK_COLOR
+                            }}
+                            text={`${item.item.level}`} />
+                    </RnView>
+                    }
+                    scrollEventThrottle={16}
+                    keyExtractor={item => `${item.rows}#${item.columns}`}
+                />
+                <Image
+                    source={require('../assets/loading.gif')}
+                    style={[
+                        rnStyles.imagePicker,
+                        {
+                            width: '100%',
+                            height: '60%',
+                        }
+                    ]}
+                />
+            </RnView>
+        </RnView>
+    }
+
+    renderDragAndDrop = () => {
+        return <RnView full>
+            <RnView full>
+                {
+                    (this.state.selectedImage == -1) ?
+                        <DragAndDrop
+                            captureImage={this.state.imageCapture}
+                            rows={this.state.selectedDimensions.rows}
+                            columns={this.state.selectedDimensions.columns}
+                            completed={this.puzzelCompleted.bind(this)} />
+                        :
+                        <DragAndDrop
+                            path={this.images[this.state.selectedImage].path}
+                            rows={this.state.selectedDimensions.rows}
+                            columns={this.state.selectedDimensions.columns}
+                            completed={this.puzzelCompleted.bind(this)} />
+                }
+            </RnView>
+            <RnView justifyBetween padding paddingBottom={50} row>
+                <RnButton
+                    marginRight={rnConstants.DEFAULT_MARGIN / 2}
+                    onPress={this.setSelectedImage.bind(this, true)}
+                    secondary
+                    text={rnStrings.VIEW_IMAGE}
+                    style={{ width: '45%' }}
+                />
+                <RnButton
+                    marginLeft={rnConstants.DEFAULT_MARGIN / 2}
+                    onPress={this.clearImageSelection.bind(this)}
+                    warning
+                    text={rnStrings.CLEAR_SELECTION}
+                    style={{ width: '45%' }}
+                />
+            </RnView>
+        </RnView>
+    }
+
     render() {
         return (
             <>
                 {
                     ((this.state.selectedImage == -1) && !this.state.imageCapture) ?
-                        <RnView full paddingTop={20} paddingHorizontal>
-                            <RnView padding>
-                                <RnText title marginBottom textAlignCenter style={{ color: colors.SECONDARY.SECONDARY_900 }}>Select Image to Start the game</RnText>
-                                <RnView row>
-                                    <AttachmentPicker onImageSelect={this.onImageSelect.bind(this)} />
-                                    <FlatList
-                                        data={this.images}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        scrollEnabled={true}
-                                        renderItem={(item) => <TouchableOpacity
-                                            onPress={() => {
-                                                this.setState({
-                                                    imageCapture: undefined,
-                                                    selectedImage: item.index,
-                                                    completed: false,
-                                                    startTime: new Date(),
-                                                })
-                                            }}
-                                        >
-                                            <Image
-                                                source={item.item.img}
-                                                style={[
-                                                    {
-                                                        width: 100,
-                                                        height: 150,
-                                                        resizeMode: 'stretch',
-                                                        marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                                                        borderRadius: 10
-                                                    },
-                                                ]}
-                                            />
-                                        </TouchableOpacity>
-                                        }
-                                        scrollEventThrottle={16}
-                                        keyExtractor={item => item.path}
-                                    />
-                                </RnView>
-                            </RnView>
-                            <RnView full justifyCenter marginBottom={50}>
-                                <FlatList
-                                    data={imgDimensions}
-                                    ListHeaderComponent={<RnText title margin>{`Choosen Level : ${this.state.selectedDimensions.level}`}</RnText>}
-                                    showsVerticalScrollIndicator={false}
-                                    scrollEnabled={true}
-                                    numColumns={3}
-                                    renderItem={(item) => <RnView padding style={{
-                                        width: '33%'
-                                    }}>
-                                        <RnButton
-                                            onPress={() => {
-                                                this.setState({
-                                                    selectedDimensions: item.item
-                                                })
-                                            }}
-                                            style={(this.state.selectedDimensions.level == item.item.level) ? {
-                                                backgroundColor: rnLevel[item.item.level].backgroundColor,
-                                                borderColor: rnLevel[item.item.level].backgroundColor
-                                            } :
-                                                {
-                                                    backgroundColor: rnLevel[item.item.level].lightBackgroundColor,
-                                                    borderColor: rnLevel[item.item.level].backgroundColor
-                                                }}
-                                            textStyle={{
-                                                color: (this.state.selectedDimensions.level == item.item.level) ? rnConstants.WHITE_COLOR : rnConstants.BLACK_COLOR
-                                            }}
-                                            text={`${item.item.level}`} />
-                                    </RnView>
-                                    }
-                                    scrollEventThrottle={16}
-                                    keyExtractor={item => `${item.rows}#${item.columns}`}
-                                />
-                                <Image
-                                    source={require('../assets/loading.gif')}
-                                    style={[
-                                        {
-                                            width: '100%',
-                                            height: '60%',
-                                            resizeMode: 'stretch',
-                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                                            borderRadius: 10
-                                        },
-                                    ]}
-                                />
-                            </RnView>
-                        </RnView>
+                        this.renderMainScreen()
                         :
                         !this.state.completed ?
-                            <RnView full>
-                                <RnView full>
-                                    {
-                                        (this.state.selectedImage == -1) ?
-                                            <DragAndDrop captureImage={this.state.imageCapture} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
-                                            :
-                                            <DragAndDrop path={this.images[this.state.selectedImage].path} rows={this.state.selectedDimensions.rows} columns={this.state.selectedDimensions.columns} completed={(completed: boolean) => { this.puzzelCompleted(completed) }} />
-                                    }
-                                </RnView>
-                                <RnView justifyBetween padding paddingBottom={50} row>
-                                    <RnButton
-                                        marginRight={rnConstants.DEFAULT_MARGIN / 2}
-                                        onPress={() => { this.setState({ showSelectedImage: true }) }}
-                                        secondary
-                                        text="View Image"
-                                        style={{ width: '45%' }}
-                                    />
-                                    <RnButton
-                                        marginLeft={rnConstants.DEFAULT_MARGIN / 2}
-                                        onPress={() => { this.setState({ selectedImage: -1, completed: false, imageCapture: undefined }) }}
-                                        warning
-                                        text="Clear Selection"
-                                        style={{ width: '45%' }}
-                                    />
-                                </RnView>
-                            </RnView>
+                            this.renderDragAndDrop()
                             :
-                            <Completed image={
-                                this.state.selectedImage == -1
-                                    ?
-                                    { uri: this.state.imageCapture?.uri }
-                                    :
-                                    this.images[this.state.selectedImage].img
-                            } timeTaken={this.state.timeTaken} nextPuzzle={() => { this.setState({ selectedImage: -1, completed: false, imageCapture: undefined }) }} />
+                            <Completed image={this.getSelectedImage()}
+                                timeTaken={this.state.timeTaken}
+                                nextPuzzle={this.clearImageSelection.bind(this)}
+                            />
                 }
-
                 <Modal
                     animationType="slide"
                     transparent={true}
                     visible={this.state.showSelectedImage}
-                    onRequestClose={() => {
-                        this.setState({ showSelectedImage: false })
-                    }}>
+                    onRequestClose={this.setSelectedImage.bind(this, false)}>
                     <RnView style={rnStyles.centeredView}>
                         <RnView style={rnStyles.modalView}>
-                            {(this.state.selectedImage == -1) ?
-                                <Image
-                                    source={{ uri: this.state.imageCapture?.uri }}
-                                    style={[
-                                        {
-                                            width: 200,
-                                            height: 250,
-                                            resizeMode: 'stretch',
-                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                                            borderRadius: 10
-                                        },
-                                    ]}
-                                />
-                                :
-                                <Image
-                                    source={this.images[this.state.selectedImage].img}
-                                    style={[
-                                        {
-                                            width: 200,
-                                            height: 250,
-                                            resizeMode: 'stretch',
-                                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                                            borderRadius: 10
-                                        },
-                                    ]}
-                                />
-                            }
-                            <Pressable
-                                style={[rnStyles.previewButton]}
-                                onPress={() => this.setState({ showSelectedImage: false })}>
-                                <RnText style={rnStyles.previewTextStyle}>Hide Image</RnText>
-                            </Pressable>
+                            <Image
+                                source={this.getSelectedImage()}
+                                style={[
+                                    rnStyles.imagePicker,
+                                    {
+                                        width: this.dimension.width / 1.5,
+                                        height: this.dimension.height / 2
+                                    }
+                                ]}
+                            />
+                            <RnButton
+                                marginTop
+                                text={rnStrings.HIDE_IMAGE}
+                                secondary
+                                onPress={this.setSelectedImage.bind(this, false)}
+                            />
                         </RnView>
                     </RnView>
                 </Modal>

@@ -27,7 +27,7 @@ export const themeOptions = {
     },
     success: {
         backgroundColor: rnConstants.SUCCESS_COLOR,
-        textColor: rnConstants.WHITE_COLOR,
+        textColor: rnConstants.BLACK_COLOR,
         outlineTextColor: rnConstants.DARK_SUCCESS_COLOR,
         borderColor: rnConstants.SUCCESS_COLOR,
         fontSize: rnConstants.MEDIUM_FONT_SIZE,

@@ -1,12 +1,11 @@
 import React from "react";
 import {
-    Alert,
     Image,
     TouchableOpacity,
 } from "react-native";
-import rnConstants from "../@library/config/rn-constants";
 import * as ImagePicker from 'expo-image-picker';
 import { ImagePickerResult } from "expo-image-picker";
+import { rnStyles } from "../@library/config/rn-styles";
 
 interface AttachmentPickerInterface {
     showImagePicker: boolean,
@@ -39,13 +38,6 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
         if (!result.canceled) {
             this.props.onImageSelect(result.assets[0])
         }
-        else
-            Alert.alert('Image', 'Error while seleting image', [
-                {
-                    text: 'Cancel',
-                    style: 'cancel'
-                }
-            ], { cancelable: true })
     }
 
 
@@ -56,15 +48,7 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
             >
                 <Image
                     source={this.img.img}
-                    style={[
-                        {
-                            width: 100,
-                            height: 150,
-                            resizeMode: 'stretch',
-                            marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
-                            borderRadius: 10
-                        },
-                    ]}
+                    style={rnStyles.imagePicker}
                 />
             </TouchableOpacity>
         );
