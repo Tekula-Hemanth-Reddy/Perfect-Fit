@@ -23,7 +23,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app accesses the library to upload pictures to create puzzel."
-      }
+      },
+      "bundleIdentifier": "perfect-fit"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,11 +32,19 @@
         "backgroundColor": "#fff7eb"
       },
       "permissions": [
-        "READ_EXTERNAL_STORAGE"
-      ]
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.hemanth_reddy_tekula.perfectfit"
     },
     "web": {
       "favicon": "./assets/icon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3dcf20f5-e836-4af0-be79-7bf30b252c37"
+      }
+    },
+    "owner": "hemanth_reddy_tekula"
   }
 }

@@ -56,8 +56,8 @@ export const getImagesArray = async (img: ImageSourcePropType | any, imgHeight: 
                             style={{
                                 width: imgWidth,
                                 height: imgHeight,
-                                left: x, // Position tiles based on their coordinates
-                                top: y,
+                                // left: x, // Position tiles based on their coordinates
+                                // top: y,
                                 borderWidth: 1,
                                 borderRadius: 5,
                                 borderColor: 'white'

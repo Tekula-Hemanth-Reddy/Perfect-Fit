@@ -142,7 +142,7 @@ export default class Main extends React.Component<{}, MainInterface> {
     }
 
     renderMainScreen = () => {
-        return <RnView full paddingTop={20} paddingHorizontal>
+        return <RnView full paddingHorizontal style={{ paddingTop: '20%' }}>
             <RnView padding>
                 <RnText
                     title
@@ -292,6 +292,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                                 marginTop
                                 text={rnStrings.HIDE_IMAGE}
                                 secondary
+                                large
                                 onPress={this.setSelectedImage.bind(this, false)}
                             />
                         </RnView>

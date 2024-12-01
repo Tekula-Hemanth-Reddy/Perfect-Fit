@@ -29,7 +29,7 @@ interface DragPropInterface {
 
 export default class DragAndDrop extends React.Component<DragPropInterface, DragStateInterface> {
 
-    paddingTop: number = 10;
+    paddingTop: number = 100;
     paddingLeft: number = 15;
 
     rows: number = 3;
@@ -53,8 +53,8 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
 
     constructor(props: DragPropInterface) {
         super(props);
-        this.rows = this.props.rows,
-            this.columns = this.props.columns
+        this.rows = this.props.rows
+        this.columns = this.props.columns
 
         this.rowHeight = Dimensions.get('window').height / (this.rows + 2);
         this.rowWidth = Dimensions.get('window').width / (this.columns + 0.3);
@@ -339,7 +339,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
             }}
             {...(noPanResponder ? {} : this._panResponder.panHandlers)}
         >
-            <RnText>{item}</RnText>
+            {item}
         </RnView>
     );
 
