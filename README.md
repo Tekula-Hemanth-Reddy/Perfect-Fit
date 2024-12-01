@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Image Selection**: Choose an image from your phone's gallery or use one of the predefined images provided by the app.
+- **Image Selection**: Choose an image from your phone's gallery or use one of the predefined images provided by the App.
 - **Multiple Difficulty Levels**: 
   - **Beginner**
   - **Novice**
