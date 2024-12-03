@@ -29,6 +29,7 @@ export const getImagesArray = async (img: ImageSourcePropType | any, imgHeight: 
         if (!img.uri) {
             img = Asset.fromModule(img); // Update with your asset path
             await img.downloadAsync(); // Ensure the asset is fully loaded
+            img.uri = img.localUri
         }
 
         const width = imgWidth * columns, height = imgHeight * rows
