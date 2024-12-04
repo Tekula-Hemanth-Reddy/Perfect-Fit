@@ -1,4 +1,5 @@
 import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import { Image, ImageSourcePropType } from 'react-native';
 
@@ -26,10 +27,23 @@ export const getImageInPrefferedSize = async (img: string, height: number, width
 
 export const getImagesArray = async (img: ImageSourcePropType | any, imgHeight: number, imgWidth: number, rows: number, columns: number) => {
     try {
-        if (!img.uri) {
-            img = Asset.fromModule(img); // Update with your asset path
-            await img.downloadAsync(); // Ensure the asset is fully loaded
-            img.uri = img.localUri
+        try {
+            if (!img.uri) {
+                img = Asset.fromModule(img); // Update with your asset path
+                await img.downloadAsync(); // Ensure the asset is fully loaded
+                const documentDirectory = FileSystem.documentDirectory;
+                const fileName = img.localUri.split('/').pop(); // Get the file name from the asset URI
+                const filePath = documentDirectory + fileName;
+
+                // Copy the asset file to the document directory
+                await FileSystem.copyAsync({
+                    from: img.localUri,
+                    to: filePath,
+                });
+                img.uri = filePath
+            }
+        } catch (error) {
+            console.log(error)
         }
 
         const width = imgWidth * columns, height = imgHeight * rows
