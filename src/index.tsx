@@ -19,6 +19,7 @@ import { rnStyles } from "../@library/config/rn-styles";
 import { ImageResult } from "expo-image-manipulator";
 import { rnStrings } from "../@library/config/rn-strings";
 import DragAndDrop from "./drag_drop";
+import Timer from "./timer";
 
 interface MainInterface {
     selectedImage: number,
@@ -190,14 +191,14 @@ export default class Main extends React.Component<{}, MainInterface> {
                             }}
                             style={(this.state.selectedDimensions.level == item.item.level) ? {
                                 backgroundColor: rnLevel[item.item.level].backgroundColor,
-                                borderColor: rnLevel[item.item.level].backgroundColor
+                                borderColor: rnLevel[item.item.level].backgroundColor,
                             } :
                                 {
                                     backgroundColor: rnLevel[item.item.level].lightBackgroundColor,
                                     borderColor: rnLevel[item.item.level].backgroundColor
                                 }}
                             textStyle={{
-                                color: (this.state.selectedDimensions.level == item.item.level) ? rnConstants.WHITE_COLOR : rnConstants.BLACK_COLOR
+                                color: (this.state.selectedDimensions.level == item.item.level) ? rnLevel[item.item.level].textColor : rnLevel[item.item.level].lightTextColor
                             }}
                             text={`${item.item.level}`} />
                     </RnView>
@@ -237,6 +238,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                             completed={this.puzzelCompleted.bind(this)} />
                 }
             </RnView>
+            <Timer currentTime={this.state.startTime} />
             <RnView justifyBetween padding paddingBottom={50} row>
                 <RnButton
                     marginRight={rnConstants.DEFAULT_MARGIN / 2}

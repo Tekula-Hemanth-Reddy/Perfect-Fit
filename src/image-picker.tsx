@@ -29,7 +29,7 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
     pickImage = async () => {
         await ImagePicker.requestCameraPermissionsAsync();
         let result: ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: false,
             allowsMultipleSelection: false,
             aspect: [4, 3],

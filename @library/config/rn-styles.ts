@@ -60,7 +60,7 @@ const textStyles = StyleSheet.create({
   },
   // used for button
   buttonText: {
-    lineHeight: 24,
+    lineHeight: 20,
   },
 })
 
