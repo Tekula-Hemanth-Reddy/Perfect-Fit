@@ -12,6 +12,15 @@ export const assets: { [key: string]: ImageSourcePropType } = {
     'sixth': require('../assets/img/sixth.jpeg')
 }
 
+export const instructions: string[] = [
+    `Select the level you want to play: Beginner, Novice, Intermediate, Advanced, Expert, or Master.`,
+    `Select an image: You can choose from predefined images or select an image from your gallery by clicking the image photo.`,
+    `Once you've selected the level and image, the game will begin with a timer.`,
+    `The app will divide the image into blocks based on the level you selected and shuffle them. Rearrange the blocks to restore the image.`,
+    `You can view the original image at any time by clicking “View Image”.`,
+    `If you want to go back, click “Clear Selection” to reset and choose a new level or image.`
+]
+
 export const getImageInPrefferedSize = async (img: string, height: number, width: number) => {
     try {
         const result = await ImageManipulator.manipulateAsync(

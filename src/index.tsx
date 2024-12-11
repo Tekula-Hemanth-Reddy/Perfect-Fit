@@ -8,7 +8,7 @@ import {
     Dimensions
 } from "react-native";
 import { Completed } from "./completed";
-import { formatString, getTimeDifference } from "../helper";
+import { formatString, getTimeDifference, instructions } from "../helper";
 import { RnView, RnText, RnButton } from "../@library";
 import colors from "../@library/config/rn-colors";
 import rnConstants from "../@library/config/rn-constants";
@@ -146,6 +146,7 @@ export default class Main extends React.Component<{}, MainInterface> {
         return <RnView full paddingHorizontal style={{ paddingTop: '20%' }}>
             <RnView padding>
                 <RnText
+                    fontWeight={'bold'}
                     title
                     marginBottom
                     textAlignCenter
@@ -157,7 +158,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                     <FlatList
                         data={this.images}
                         horizontal
-                        showsHorizontalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={true}
                         scrollEnabled={true}
                         renderItem={(item) => <TouchableOpacity
                             onPress={this.onPreImageSelect.bind(this, item.index)}
@@ -173,10 +174,10 @@ export default class Main extends React.Component<{}, MainInterface> {
                     />
                 </RnView>
             </RnView>
-            <RnView full justifyCenter marginBottom={50}>
+            <RnView justifyCenter marginBottom>
                 <FlatList
                     data={imgDimensions}
-                    ListHeaderComponent={<RnText title margin>{formatString(rnStrings.CHOOSEN_LEVEL, this.state.selectedDimensions.level)}</RnText>}
+                    ListHeaderComponent={<RnText fontWeight={'bold'} title margin>{formatString(rnStrings.CHOOSEN_LEVEL, this.state.selectedDimensions.level)}</RnText>}
                     showsVerticalScrollIndicator={false}
                     scrollEnabled={true}
                     numColumns={3}
@@ -206,15 +207,19 @@ export default class Main extends React.Component<{}, MainInterface> {
                     scrollEventThrottle={16}
                     keyExtractor={item => `${item.rows}#${item.columns}`}
                 />
-                <Image
-                    source={require('../assets/loading.gif')}
-                    style={[
-                        rnStyles.imagePicker,
-                        {
-                            width: '100%',
-                            height: '60%',
-                        }
-                    ]}
+            </RnView>
+            <RnView full marginBottom={50}>
+                <RnText title margin>Welcome to Perfect Fit!</RnText>
+                <FlatList
+                    data={instructions}
+                    showsVerticalScrollIndicator={true}
+                    scrollEnabled={true}
+                    renderItem={(item) => <RnView padding >
+                        <RnText fontWeight={'bold'}>👉🏿 {item.item}</RnText>
+                    </RnView>
+                    }
+                    scrollEventThrottle={16}
+                    keyExtractor={(item, index: number) => index.toString()}
                 />
             </RnView>
         </RnView>

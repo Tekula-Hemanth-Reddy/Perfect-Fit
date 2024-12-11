@@ -10,8 +10,9 @@ const Timer = (props: { currentTime: Date }) => {
     const [seconds, setSeconds] = useState(0);
 
     const getTime = () => {
-        const time = Date.now() - Date.parse(props.currentTime.toDateString());
-        console.log(time)
+        const currentTimeInMs = props.currentTime.getTime(); // Get the current time in milliseconds
+        const currentTime = Date.now(); // Get the current time in milliseconds
+        const time = currentTime - currentTimeInMs; // Time difference in milliseconds
         setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
         setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
         setMinutes(Math.floor((time / 1000 / 60) % 60));
@@ -25,7 +26,7 @@ const Timer = (props: { currentTime: Date }) => {
     }, []);
 
     return (
-        <RnText paddingHorizontal title>Timer: {days} Days {hours} Hrs {minutes} Mins {seconds} Sec</RnText>
+        <RnText fontWeight={'bold'} paddingHorizontal>Timer: {days} Days {hours} Hrs {minutes} Mins {seconds} Sec</RnText>
     );
 };
 
