@@ -17,6 +17,8 @@ export const instructions: string[] = [
     `Select an image: You can choose from predefined images or select an image from your gallery by clicking the image photo.`,
     `Once you've selected the level and image, the game will begin with a timer.`,
     `The app will divide the image into blocks based on the level you selected and shuffle them. Rearrange the blocks to restore the image.`,
+    `You can rearrange the blocks using drag and drop: Simply drag a block and drop it in the correct position to help restore the image.`,
+    `Blocks can only be moved to adjacent positions.`,
     `You can view the original image at any time by clicking “View Image”.`,
     `If you want to go back, click “Clear Selection” to reset and choose a new level or image.`
 ]
