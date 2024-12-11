@@ -56,7 +56,7 @@ export default class DragAndDrop extends React.Component<DragPropInterface, Drag
         this.rows = this.props.rows
         this.columns = this.props.columns
 
-        this.rowHeight = Dimensions.get('window').height / (this.rows + 2.5);
+        this.rowHeight = Dimensions.get('window').height / (this.rows + 3);
         this.rowWidth = Dimensions.get('window').width / (this.columns + 0.3);
 
         this.state = {

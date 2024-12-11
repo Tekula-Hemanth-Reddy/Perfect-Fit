@@ -244,6 +244,7 @@ export default class Main extends React.Component<{}, MainInterface> {
                 }
             </RnView>
             <Timer currentTime={this.state.startTime} />
+            <RnText paddingHorizontal>Note : Blocks can only be moved to adjacent positions.</RnText>
             <RnView justifyBetween padding paddingBottom={50} row>
                 <RnButton
                     marginRight={rnConstants.DEFAULT_MARGIN / 2}
