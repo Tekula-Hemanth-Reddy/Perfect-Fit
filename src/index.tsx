@@ -177,7 +177,7 @@ export default class Main extends React.Component<{}, MainInterface> {
             <RnView justifyCenter marginBottom>
                 <FlatList
                     data={imgDimensions}
-                    ListHeaderComponent={<RnText fontWeight={'bold'} title margin>{formatString(rnStrings.CHOOSEN_LEVEL, this.state.selectedDimensions.level)}</RnText>}
+                    ListHeaderComponent={<RnText fontWeight={'bold'} title margin>{formatString(rnStrings.CHOSEN_LEVEL, this.state.selectedDimensions.level)}</RnText>}
                     showsVerticalScrollIndicator={false}
                     scrollEnabled={true}
                     numColumns={3}
