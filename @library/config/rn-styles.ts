@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import rnConstants from "./rn-constants";
 
 const layout = StyleSheet.create({
@@ -88,6 +88,54 @@ const imagePicker = StyleSheet.create({
     resizeMode: 'stretch',
     marginHorizontal: rnConstants.DEFAULT_MARGIN / 2,
     borderRadius: 10
+  },
+
+  preview: {
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0
+  },
+
+  bottomView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  actionModalView: {
+    width: 260,
+    backgroundColor: rnConstants.WHITE_COLOR,
+    borderRadius: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  actionButton: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: rnConstants.DEFAULT_PADDING,
+    borderRadius: 100,
+    marginBottom: rnConstants.DEFAULT_MARGIN / 2,
+  },
+  galleryButton: {
+    backgroundColor: rnConstants.GALLERY,
+  },
+  cameraButton: {
+    backgroundColor: rnConstants.CAMERA,
+  },
+  closeButton: {
+    backgroundColor: rnConstants.WARNING_BACKGROUND,
   }
 });
 
