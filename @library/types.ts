@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { TextProps, TextStyle, TouchableOpacityProps, ViewProps } from "react-native";
 
 
@@ -49,9 +50,9 @@ export interface RnButtonProps extends TouchableOpacityProps, DefaultStyleProps 
     small?: boolean;
     transparent?: boolean;
     outline?: boolean;
-    iconLeft?: JSX.Element
-    iconRight?: JSX.Element,
-    icon?: JSX.Element;
+    iconLeft?: React.JSX.Element
+    iconRight?: React.JSX.Element,
+    icon?: React.JSX.Element;
     primary?: boolean;
     secondary?: boolean;
     warning?: boolean;

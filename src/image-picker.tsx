@@ -12,8 +12,7 @@ import { rnStyles } from "../@library/config/rn-styles";
 import rnConstants from "../@library/config/rn-constants";
 import { RnIcon, RnText, RnView } from "../@library";
 import { rnStrings } from "../@library/config/rn-strings";
-import { Camera, CameraView, PermissionStatus } from "expo-camera";
-import { CameraType } from "expo-camera/build/legacy/Camera.types";
+import { Camera, CameraType, CameraView, PermissionStatus } from "expo-camera";
 import { FlashModeValues } from "../@library/config/enum";
 import { ImageResult } from "expo-image-manipulator/build/ImageManipulator.types";
 import { PFCameraToolbar } from "./camera/toolbar";
@@ -39,14 +38,14 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
         path: 'camera',
         img: require('../assets/camera.jpg')
     }
-    cameraRef!: CameraView
+    cameraRef = React.createRef<CameraView>();
     constructor(props: AttachmentPickerProps) {
         super(props)
         this.state = {
             showImagePicker: false,
             showCameraModal: false,
             pfCamera: {
-                type: CameraType.back,
+                type: 'back',
                 capture: undefined,
                 flashMode: FlashModeValues.AUTO,
             }
@@ -92,7 +91,7 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
         this.setState({
             showCameraModal: true,
             pfCamera: {
-                type: CameraType.back,
+                type: 'back',
                 capture: undefined,
                 flashMode: FlashModeValues.AUTO,
             }
@@ -108,7 +107,10 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
     }
 
     onCapture = async () => {
-        const photoData = await this.cameraRef.takePictureAsync();
+        if (!this.cameraRef.current) {
+            return;
+        }
+        const photoData = await this.cameraRef.current.takePictureAsync();
         this.setPfData({ capture: photoData });
     }
 
@@ -199,7 +201,7 @@ export default class AttachmentPicker extends React.Component<AttachmentPickerPr
                                     <CameraView
                                         facing={this.state.pfCamera.type}
                                         flash={this.state.pfCamera.flashMode}
-                                        ref={camera => this.cameraRef = camera as CameraView}
+                                        ref={this.cameraRef}
                                         style={rnStyles.preview}
                                     />
                                     <TouchableOpacity

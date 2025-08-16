@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/loading.gif",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#fff7eb"
     },
@@ -25,12 +25,13 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "This app accesses the library to upload pictures to create puzzel."
+        "NSPhotoLibraryUsageDescription": "This app accesses the library to upload pictures to create puzzle."
       },
       "bundleIdentifier": "perfect-fit"
     },

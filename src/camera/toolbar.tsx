@@ -1,6 +1,5 @@
-import { FlashMode } from "expo-camera";
+import { CameraType, FlashMode } from "expo-camera";
 import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { CameraType } from "expo-camera/build/legacy/Camera.types";
 import { FlashModeValues } from "../../@library/config/enum";
 import { RnView, RnButton, RnIcon } from "../../@library";
 import rnConstants from "../../@library/config/rn-constants";
@@ -29,7 +28,7 @@ export const PFCameraToolbar = (props: PFCameraToolbarProps) => {
         </TouchableWithoutFeedback>
 
         <RnButton style={{ height: rnConstants.TOOLBAR_HEIGHT }} transparent onPress={() => props.setCameraType(
-            { type: props.cameraType === CameraType.back ? CameraType.front : CameraType.back }
+            { type: props.cameraType === 'back' ? 'front' : 'back' }
         )} iconLeft={<RnIcon
             name={Platform.OS === "ios" ? 'flip-camera-ios' : "flip-camera-android"}
             size={rnConstants.ICON_SIZE_LARGE}
