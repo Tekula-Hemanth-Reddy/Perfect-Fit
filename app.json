@@ -2,7 +2,7 @@
   "expo": {
     "name": "Perfect Fit",
     "slug": "perfect-fit",
-    "version": "1.0.11",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -36,7 +36,7 @@
       "bundleIdentifier": "perfect-fit"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#fff7eb"
